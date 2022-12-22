@@ -1,0 +1,75 @@
+---
+title: "day1"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+
+input<-read.delim('/Users/jwalla12/repos/aoc_2022/day1/input.txt', 
+                  blank.lines.skip = F, header = F) 
+
+#where are the blank lines?
+na_index <- which(is.na(input))
+
+#loop through (i)+1 and (i+1)-1 element of the index 
+#(get the index ranges where there's actually information)
+#making everything start with 1 because the first entry 
+#in the input is just an elf carrying a single item.
+
+begin_index<-unlist(c(1, 
+                      c(lapply(seq_along(na_index), 
+                               function(i) 
+                                 paste0(na_index[i]+1)
+                               ))
+                      ))
+
+end_index<-unlist(c(1, 
+                    c(lapply(seq_along(na_index), 
+                              function(i) 
+                                paste0(na_index[i+1]-1)
+                             ))
+                    ))
+
+#fix last ending index which is currently NA
+end_index <- str_replace(end_index, pattern = 'NA', 
+                         replacement = as.character(
+                           (length(unlist(input)))
+                           )
+                         )
+
+#create start and end indices string
+indices <- unlist(c(lapply(seq_along(begin_index), 
+                           function(i) 
+                             paste0(begin_index[i], ":", end_index[i])
+                           )))
+
+#R won't just evaluate the indices for reasons
+#writing this annoying function to make it work
+get_sum <- function(indices, value){
+  call<-paste0('input[',indices[value],',]')
+  values<-eval(parse(text = call)) %>% sum()
+  return(values)}
+
+#run the get_sum function across the entries of indices
+sums <- lapply(seq_along(indices), 
+               function(i) 
+                 get_sum(indices,i)) %>% unlist() %>% data.frame()
+
+sums$elf <- rownames(sums)
+sums$calories <- sums[,1]
+sums[,1] <- NULL
+sums <- sums[order(sums$calories, decreasing = T), ]   
+
+#elf 131 is carrying the most calories.
+head(sums)
+
+#double check.
+indices[131]
+sum(input[1117:1129,])
+
+#item 1117 sounds interesting
+input[1117:1129,]
+```
