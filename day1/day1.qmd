@@ -79,3 +79,10 @@ sum(input[637:646,])
 # 71023
 
 ```
+
+```{r}
+#part 2 -- how many calories are the top 3 elves carrying?
+sum(sums$calories[1:3])
+
+# 206289
+```
