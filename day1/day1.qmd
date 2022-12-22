@@ -65,13 +65,17 @@ sums$calories <- sums[,1]
 sums[,1] <- NULL
 sums <- sums[order(sums$calories, decreasing = T), ]   
 
-#elf 131 is carrying the most calories.
+#elf 69 is carrying the most calories.
 head(sums)
 
-#double check.
-indices[131]
-sum(input[1117:1129,])
+sums[1,1] 
+#69
 
-#item 1117 sounds interesting
-input[1117:1129,]
+#double check. 
+indices[69]
+#"637:646"
+
+sum(input[637:646,])
+# 71023
+
 ```
